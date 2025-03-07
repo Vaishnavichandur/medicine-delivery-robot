@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medicine Delivery</title>
+  </head>
+  <body>
+    <h1>Medicine Delivery Chat</h1>
+    <div id="chat-log"></div>
+    <input type="text" id="chat-input" placeholder="Enter message..." />
+    <button id="chat-send">Send</button>
+
+    <script>
+      const chatLog = document.getElementById("chat-log");
+      const chatInput = document.getElementById("chat-input");
+      const chatSend = document.getElementById("chat-send");
+
+      const socket = new WebSocket(
+        "ws://" + window.location.host + "/ws/medicine_delivery/"
+      );
+
+      socket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        chatLog.innerHTML += `<p>${data.message}</p>`;
+      };
+
+      chatSend.onclick = function () {
+        const message = chatInput.value;
+        socket.send(JSON.stringify({ message: message }));
+        chatInput.value = ""; // Clear input field
+      };
+    </script>
+  </body>
+</html>
